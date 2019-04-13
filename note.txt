@@ -1,0 +1,101 @@
+django-admin 常用
+    startproject 创建django项目
+    startapp 创建django应用
+    runserver
+    shell
+    test
+    makemigrations 创建模型变更的迁移文件
+    migratie 执行迁移文件
+    dumpdata 数据导出
+
+创建项目:
+    django-admin startproject django_introduction
+
+项目介绍:
+    manage.py 管理文件
+    django_introduction/settings.py 配置文件
+    django_introduction/urls.py 路由文件
+
+项目启动:
+    python manage.py runserver
+
+应用VS项目
+    项目是可运行web应用,包含多个应用
+    应用是可重用软件包
+    应用可以自己管理模型,视图,模板,路由和静态文件
+
+
+创建应用
+    python manage.py startapp blog
+
+应用介绍
+    views.py 视图处理
+    models.py 定义模型
+    urls.py 应用路由
+    test.py 测试用例
+    apps.py 声明应用
+    admin.py admin管理对象
+
+HelloWorld
+    django视图,产生内容
+        blog/views.py def hello_world(request):
+
+    django路由
+        应用层 blog/urls.py  -> path('hello_world',blog.views.hello_world),
+        项目层 django_introduction/urls.py -> path('blog/',include('blog.urls'))
+
+    应用加入配置文件
+        django_introduction/settings.py
+            INSTALLED_APPS
+                'blog.apps.BlogConfig' 对应blog/apps.py BlogConfig
+
+支持让Vue跨域访问
+    pip install django-cors-headers
+    django_introduction/settings.py MIDDLEWARE 第三行->'corsheaders.middleware.CorsMiddleware',
+    django_introduction/settings.py 加入白名单
+        CORS_ORIGIN_WHITELIST = (
+        '127.0.0.1:8000', #Backend
+        '127.0.0.1:8081' #Frontend
+    )
+
+模型层配置
+    位于视图层与数据库之间的组件,用于对象与数据转化
+    django_introduction/settings.py DATABASES
+
+模型设计
+    blog/models.py 定义模型
+    python manage.py makemigrations 生成迁移文件到blog/migrations
+    python manage.py migrate 迁移文件同步到数据库
+
+Django Shell
+    继承django的环境
+    临时性操作方便开发 调试
+    python manage.py shell 进入环境
+    >>> from blog.models import Article
+    >>> a = Article()
+    >>> a.title = 'Test'
+    >>> a.save()
+    >>> articles = Article.objects.all()
+    >>> article = articles[0]
+
+django admin
+    后台管理工具,操作模型元数据
+    管理页面创建繁琐,可以直接用django admin模块
+    创建管理员用户
+        python manage.py createsuperuser
+
+    项目启动与登录
+        python manage.py runserver
+        127.0.0.1:8000/admin
+
+    模型注册到admin
+        blog/admin.py -> admin.site.register(Article)
+
+    模型列表显示title
+        blog/models.py -> def __str__(self):
+
+django连接mysql
+    1. pip install PyMySQL
+    2. django_introduction/__init__.py ->
+        import pymysql
+        pymysql.install_as_MySQLdb()

@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 # Create your views here.
 
 def hello_world(request):
-    return HttpResponse("Hello World")
+    return HttpResponse("Hello World Halley")
 
 def article_content(request):
     article = Article.objects.all()[0]
